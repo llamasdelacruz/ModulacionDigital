@@ -1,2 +1,2 @@
 # ModulacionDigital
-Es un proyecto de la escuela sonbre la conversion de tramas binnarias a diferentes tipos de señales digitales
+Es un proyecto de la escuela sobre la conversion de tramas binarias a diferentes tipos de señales digitales
