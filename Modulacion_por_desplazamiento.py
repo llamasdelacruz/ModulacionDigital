@@ -13,18 +13,16 @@ class Ondas(PalabrasBinarias):
         color_1 = 0.5
         color_0 = 0.5
         array = self.Convertir_binario(oracion)
+        print(array)
         direccion = direcion_ondas
-        bit_anterior = array[0][:1]
+
         for trama in array:
             for bit in trama:
 
                 if(bit == "1"):
 
                     if(cambio_fase):
-                        if(bit_anterior != "1" and direccion == 1):
-                            direccion = -1
-                        elif(bit_anterior != "1" and direccion == -1):
-                            direccion = 1
+                        direccion = -1
 
                     x = np.linspace(base*np.pi, tope*np.pi, 100)
                     y = direccion*amplitud_onda1*np.sin(x*frecuencia_onda1)
@@ -34,10 +32,7 @@ class Ondas(PalabrasBinarias):
 
                 else:
                     if(cambio_fase):
-                        if(bit_anterior != "0" and direccion == 1):
-                            direccion = -1
-                        elif(bit_anterior != "0" and direccion == -1):
-                            direccion = 1
+                        direccion = 1
 
                     x2 = np.linspace(base*np.pi, tope*np.pi, 100)
                     y2 = direccion*amplitud_onda2*np.sin(x2*frecuencia_onda2)
@@ -46,10 +41,10 @@ class Ondas(PalabrasBinarias):
 
                 base = tope
                 tope += 1
-                bit_anterior = bit
 
-        plt.axhline(y=0, color="black")
-        plt.grid(axis='x', color='0.95')
+
+        plt.axhline(y=0, color="grey", alpha=0.5)
+        plt.grid(color='grey',alpha=0.2, linestyle='-', axis='x')
         plt.title(titulo)
         # plt.title('ASK Modulación por dezplazamiento de amplitud')
         plt.show()
@@ -95,6 +90,7 @@ class Ondas(PalabrasBinarias):
         base = 0
         tope = 1
         array = self.Convertir_binario(oracion)
+        print(array)
         for trama in array:
             for i in range(2, 9, 2):
 
@@ -127,8 +123,8 @@ class Ondas(PalabrasBinarias):
                 base = tope
                 tope += 1
 
-        plt.axhline(y=0, color="black")
-        plt.grid(axis='x', color='0.95')
+        plt.axhline(y=0, color="grey", alpha=0.5)
+        plt.grid(color='grey',alpha=0.2, linestyle='-', axis='x')
         plt.title("4-PSK")
         # plt.title('ASK Modulación por dezplazamiento de amplitud')
         plt.show()
@@ -139,6 +135,7 @@ class Ondas(PalabrasBinarias):
         tope = 1
         array = self.Convertir_binario(oracion)
         trama_completa = self.trama_preparar_QAM(array)
+        print(trama_completa)
 
         for i in range(3, len(trama_completa)+3, 3):
 
@@ -196,9 +193,9 @@ class Ondas(PalabrasBinarias):
             tope +=1 
             
                 
-        plt.axhline(y = 0, color="black")  
-        plt.grid(axis='x', color='0.95')
-        plt.title("4-PSK")
+        plt.axhline(y=0, color="grey", alpha=0.5)
+        plt.grid(color='grey',alpha=0.2, linestyle='-', axis='x')
+        plt.title("8-QAM")
         # plt.title('ASK Modulación por dezplazamiento de amplitud')
         plt.show()  
 
@@ -221,7 +218,295 @@ class Ondas(PalabrasBinarias):
 
         return trama_entera
 
+    def unipolar(self):
+
+        oracion = input("Dame la palabra que quieres:")
+        array = self.Convertir_binario(oracion)
+        print(array)
+        largo = len(array)*8
+        x = [i for i in range(largo+1)]
+        y = []
+        for trama in array:
+            for bit in trama:
+
+                if(bit == "1"):
+                   
+                   y.append(20)
+
+                else:
+                
+                    y.append(0)
+        y.append(0)
+
+        plt.step(x, y, where='post', label='post')
+        plt.axhline(y=0, color="grey", alpha=0.5)
+        plt.axvline(x=0, color="black")
+        plt.grid(color='grey',alpha=0.2, linestyle='-', axis='x')
+        plt.title("Unipolar")
+        # plt.title('ASK Modulación por dezplazamiento de amplitud')
+        plt.show()
+
+
+    def NRZ_L(self):
+
+        oracion = input("Dame la palabra que quieres:")
+        array = self.Convertir_binario(oracion)
+        print(array)
+        largo = len(array)*8
+        x = [i for i in range(largo+1)]
+        y = []
+        for trama in array:
+            for bit in trama:
+
+                if(bit == "1"):
+                   
+                   y.append(-20)
+
+                else:
+                
+                    y.append(20)
+        y.append(0)
+
+        plt.step(x, y, where='post', label='post')
+        plt.axhline(y=0, color="grey", alpha=0.5)
+        plt.axvline(x=0, color="black")
+        plt.grid(color='grey',alpha=0.2, linestyle='-', axis='x')
+        plt.title("NRZ-L")
+        plt.show()
+
+
+    def NRZ_I(self):
+
+        oracion = input("Dame la palabra que quieres:")
+        array = self.Convertir_binario(oracion)
+        print(array)
+        largo = len(array)*8
+        x = [i for i in range(largo+1)]
+        y = []
+        direccion = 20
+        for trama in array:
+            for bit in trama:
+
+                if(array.index(trama) == 0 and bit == trama[:2] and bit == "1"):
+                    direccion = -20
+                elif(array.index(trama) == 0 and bit == trama[:2] and bit == "0"):
+                    direccion = 20   
+                else:
+                    if(bit == "1"):
+                        direccion = -1*direccion
+                
+                    
+                y.append(direccion)
+
+        y.append(0)
+
+        plt.step(x, y, where='post', label='post')
+        plt.axhline(y=0, color="grey", alpha=0.5)
+        plt.axvline(x=0, color="black")
+        plt.grid(color='grey',alpha=0.2, linestyle='-', axis='x')
+        plt.title("NRZ-I ")
+        plt.show()
+
+    def RZ(self):
+
+        oracion = input("Dame la palabra que quieres:")
+        array = self.Convertir_binario(oracion)
+        print(array)
+        largo = len(array)*8
+        acumulador = -0.5
+        x = []
+        for i in range(-1,largo*2):
+            acumulador += 0.5
+            x.append(acumulador)
+
+        y = [0]
+        for trama in array:
+            for bit in trama:
+
+                if(bit == "1"):
+                   
+                   y.append(20)
+                   y.append(0)
+
+                else:
+                
+                    y.append(-20)
+                    y.append(0)
+
+        plt.step(x, y, where='pre', label='pre')
+        plt.axhline(y=0, color="grey", alpha=0.5)
+        plt.axvline(x=0, color="black")
+        plt.grid(color='grey',alpha=0.2, linestyle='-', axis='x')
+        plt.title("RZ")
+        plt.show()
+
+    def Manchester(self):
+
+        oracion = input("Dame la palabra que quieres:")
+        array = self.Convertir_binario(oracion)
+        print(array)
+        largo = len(array)*8
+        acumulador = -0.5
+        x = []
+        for i in range(-1,largo*2+1):
+            acumulador += 0.5
+            x.append(acumulador)
+
+        y = [0]
+        for trama in array:
+            for bit in trama:
+
+                if(bit == "1"):
+                   
+                   y.append(-20)
+                   y.append(20)
+
+                else:
+                
+                    y.append(20)
+                    y.append(-20)
+
+        y.append(0)
+
+        plt.step(x, y, where='pre', label='pre')
+        plt.axhline(y=0, color="grey", alpha=0.5)
+        plt.axvline(x=0, color="black")
+        plt.grid(color='grey',alpha=0.2, linestyle='-', axis='x')
+        plt.title("Manchester")
+        plt.show()
+        
+
+    def Manchester_diff(self):
+
+        oracion = input("Dame la palabra que quieres:")
+        array = self.Convertir_binario(oracion)
+        print(array)
+        largo = len(array)*8
+        acumulador = -0.5
+        x = []
+        for i in range(-1,largo*2+1):
+            acumulador += 0.5
+            x.append(acumulador)
+
+        y = [0]
+        primera_m = 0
+        segunda_m = 0
+        for trama in array:
+            for bit in trama:
+
+                if(len(y) == 1):
+
+                    if(bit == "1"):
+                        primera_m = 20
+                        segunda_m = -20
+                    
+                    elif(bit == "0"):
+                        primera_m = -20
+                        segunda_m = 20
+                else:
+
+                    if(bit == "1"):
+                    
+                        aux = primera_m
+                        primera_m = segunda_m
+                        segunda_m = aux
+
+                    
+                y.append(primera_m)
+                y.append(segunda_m)
+
+        y.append(0)
+        plt.step(x, y, where='pre', label='pre')
+        plt.axhline(y=0, color="grey", alpha=0.5)
+        plt.axvline(x=0, color="black")
+        plt.grid(color='grey',alpha=0.2, linestyle='-', axis='x')
+        plt.title("Manchester dif")
+        plt.show() 
+
+    def AMI(self):
+
+        oracion = input("Dame la palabra que quieres:")
+        array = self.Convertir_binario(oracion)
+        print(array)
+        largo = len(array)*8
+        x = [i for i in range(largo+1)]
+        y = []
+        numero = 20
+        for trama in array:
+            for bit in trama:
+
+                if(bit == "1"):
+
+                   y.append(numero)
+
+                   numero = -1*numero
+
+                else:
+                
+                    y.append(0)
+        y.append(0)
+
+        plt.step(x, y, where='post', label='post')
+        plt.axhline(y=0, color="grey", alpha=0.5)
+        plt.axvline(x=0, color="black")
+        plt.grid(color='grey',alpha=0.2, linestyle='-', axis='x')
+        plt.title("AMI")
+        plt.show()
+
+    def menu(self):
+
+        while(True):
+
+            try:
+                print("ASK-------------------[1]")
+                print("FSK-------------------[2]")
+                print("PSK-------------------[3]")
+                print("4-PSK-----------------[4]")
+                print("8-QAM-----------------[5]")
+                print("UNIPOLAR--------------[6]")
+                print("NRZ-L-----------------[7]")
+                print("NRZ-I-----------------[8]")
+                print("RZ--------------------[9]")
+                print("MANCHESTER------------[10]")
+                print("MANCHESTER DIFERENCIAL[11]")
+                print("AMI-------------------[12]")
+                print("B82S------------------[13]")
+                print("HDB-------------------[14]")
+                print("salir-----------------[15]")
+                opcion = int(input("Selecciona la opcion que desees:"))
+                
+                if(opcion == 15):
+                    break
+                elif(opcion == 1):
+                    self.ASK()
+                elif(opcion == 2):
+                    self.FSK()
+                elif(opcion == 3):
+                    self.PSK()
+                elif(opcion == 4):
+                    self.cuatro_PSK()
+                elif(opcion == 5):
+                    self.ocho_QAM()
+                elif(opcion == 6):
+                    self.unipolar()
+                elif(opcion == 7):
+                    self.NRZ_L()
+                elif(opcion == 8):
+                    self.NRZ_I()
+                elif(opcion == 9):
+                    self.RZ()
+                elif(opcion == 10):
+                    self.Manchester()
+                elif(opcion == 11):
+                    self.Manchester_diff()
+                elif(opcion == 12):
+                    self.AMI()
+                
+                
+            except:
+                print("An exception occurred")
 
 if(__name__ == "__main__"):
     objeto = Ondas()
-    objeto.ocho_QAM()
+    objeto.menu()
+    
