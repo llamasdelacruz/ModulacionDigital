@@ -162,7 +162,7 @@ class Ondas(PalabrasBinarias):
             elif(bites == "000"):
                     
                 x2 = np.linspace(base*np.pi,tope*np.pi,100)
-                y2 = np.sin(x*2)
+                y2 = np.sin(x2*2)
                 plt.plot(x2, y2, color='blue',alpha=0.5)
                     
             elif(bites == "010"):
@@ -260,11 +260,11 @@ class Ondas(PalabrasBinarias):
 
                 if(bit == "1"):
                    
-                   y.append(-20)
+                   y.append(-5)
 
                 else:
                 
-                    y.append(20)
+                    y.append(5)
         y.append(0)
 
         plt.step(x, y, where='post', label='post')
@@ -283,14 +283,14 @@ class Ondas(PalabrasBinarias):
         largo = len(array)*8
         x = [i for i in range(largo+1)]
         y = []
-        direccion = 20
+        direccion = 5
         for trama in array:
             for bit in trama:
 
                 if(array.index(trama) == 0 and bit == trama[:2] and bit == "1"):
-                    direccion = -20
+                    direccion = -5
                 elif(array.index(trama) == 0 and bit == trama[:2] and bit == "0"):
-                    direccion = 20   
+                    direccion = 5   
                 else:
                     if(bit == "1"):
                         direccion = -1*direccion
@@ -325,12 +325,12 @@ class Ondas(PalabrasBinarias):
 
                 if(bit == "1"):
                    
-                   y.append(20)
+                   y.append(5)
                    y.append(0)
 
                 else:
                 
-                    y.append(-20)
+                    y.append(-5)
                     y.append(0)
 
         plt.step(x, y, where='pre', label='pre')
@@ -358,13 +358,13 @@ class Ondas(PalabrasBinarias):
 
                 if(bit == "1"):
                    
-                   y.append(-20)
-                   y.append(20)
+                   y.append(-10)
+                   y.append(10)
 
                 else:
                 
-                    y.append(20)
-                    y.append(-20)
+                    y.append(10)
+                    y.append(-10)
 
         y.append(0)
 
@@ -397,12 +397,12 @@ class Ondas(PalabrasBinarias):
                 if(len(y) == 1):
 
                     if(bit == "1"):
-                        primera_m = 20
-                        segunda_m = -20
+                        primera_m = 10
+                        segunda_m = -10
                     
                     elif(bit == "0"):
-                        primera_m = -20
-                        segunda_m = 20
+                        primera_m = -10
+                        segunda_m = 10
                 else:
 
                     if(bit == "1"):
@@ -431,7 +431,7 @@ class Ondas(PalabrasBinarias):
         largo = len(array)*8
         x = [i for i in range(largo+1)]
         y = []
-        numero = 20
+        numero = 10
         for trama in array:
             for bit in trama:
 
@@ -453,6 +453,69 @@ class Ondas(PalabrasBinarias):
         plt.title("AMI")
         plt.show()
 
+    def B8ZS(self):
+
+        """ oracion = input("Dame la palabra que quieres:")
+        array = self.Convertir_binario(oracion) """
+        array = input("Dame la secuencia de bits:")
+        print(array)
+        largo = len(array)
+        x = [i for i in range(largo+1)]
+        y = []
+        numero = 10
+        ceros = 0
+        violacion = False
+        signos = 0
+        trama = "".join(array)
+
+        for bit in range(len(trama)):
+
+            if(ceros == 3 and trama[bit] == "0" and trama[bit+1:bit+5] == "0000"):
+
+                violacion = True
+                y.append(-1*numero)
+                signos +=1
+            elif(violacion and signos == 1):
+                y.append(numero)
+                signos +=1
+
+            elif(signos==2 and violacion):
+                y.append(0)
+                signos += 1
+            elif(signos==3 and violacion):
+                y.append(numero)
+                signos += 1
+            elif(signos==4 and violacion):
+                y.append(-1*numero)
+                signos = 0
+                ceros = 0
+                violacion = False
+            else:
+                if(trama[bit] == "1"):
+
+                    y.append(numero)
+                    numero = -1*numero
+                    ceros = 0
+
+                else:
+                    ceros += 1
+                    y.append(0)
+
+        y.append(0) 
+
+
+        plt.step(x, y, where='post', label='post')
+        plt.axhline(y=0, color="grey", alpha=0.5)
+        plt.axvline(x=0, color="black")
+        plt.grid(color='grey',alpha=0.2, linestyle='-', axis='x')
+        plt.title("B8ZS")
+        plt.show() 
+
+    def Analogica_digital(self):
+        entero = int(input("Dame el numero a converir"))
+        resultado = bin(entero)[2:] 
+        print(resultado)
+
     def menu(self):
 
         while(True):
@@ -472,10 +535,11 @@ class Ondas(PalabrasBinarias):
                 print("AMI-------------------[12]")
                 print("B82S------------------[13]")
                 print("HDB-------------------[14]")
-                print("salir-----------------[15]")
+                print("Analogico a digital---[15]")
+                print("salir-----------------[0]")
                 opcion = int(input("Selecciona la opcion que desees:"))
                 
-                if(opcion == 15):
+                if(opcion == 0):
                     break
                 elif(opcion == 1):
                     self.ASK()
@@ -501,10 +565,15 @@ class Ondas(PalabrasBinarias):
                     self.Manchester_diff()
                 elif(opcion == 12):
                     self.AMI()
+                elif(opcion == 13):
+                    self.B8ZS()
+
+                elif(opcion == 15):
+                    self.Analogica_digital()
                 
                 
-            except:
-                print("An exception occurred")
+            except Exception as e:
+                print(e)
 
 if(__name__ == "__main__"):
     objeto = Ondas()
