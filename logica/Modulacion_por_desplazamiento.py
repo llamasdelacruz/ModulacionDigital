@@ -522,7 +522,7 @@ class Ondas(PalabrasBinarias):
                     y.append(0)
         y.append(0)
 
-        self.graficar("Analogica a digital",array,x,y,metodo="post")
+        self.graficar("Analógica a digital",array,x,y,metodo="post")
         
     def graficar(self,titulo,array_binario,x=[],y=[],metodo="post"):
 

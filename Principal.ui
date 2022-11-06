@@ -18,7 +18,12 @@
 	background:rgb(68, 69, 84);
 	color:rgb(23, 33, 33);
 }
-
+QLineEdit{
+	background:rgb(199, 199, 199);
+}
+QSpinBox{
+	background:rgb(199, 199, 199);
+}
 QLabel {
 	background:rgb(191, 172, 181);
 	border-radius:5px;
